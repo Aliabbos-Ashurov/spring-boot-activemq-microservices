@@ -1,5 +1,7 @@
 # Spring Boot ActiveMQ Microservices
 
+![logo](static/logo-activemq.png)
+
 This repository demonstrates a microservices architecture using Spring Boot and ActiveMQ for message-driven
 communication. It provides a simple example of how to integrate ActiveMQ with Spring Boot to enable
 asynchronous messaging between services.
@@ -15,6 +17,8 @@ and another consumes them for processing.
 - **ActiveMQ Integration**: Configured for reliable message delivery.
 - **Eureka Discovery Client**: Enables service registration and discovery.
 - **Spring Cloud Config**: Centralizes configuration management.
+
+![logo](static/ActiveMQ-Architecture-1-1024x296.jpeg)
 
 ## Configuration
 
