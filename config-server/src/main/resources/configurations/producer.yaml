@@ -1,0 +1,24 @@
+spring:
+  cloud:
+    discovery:
+      enabled: true
+  activemq:
+    broker-url: tcp://localhost:61616
+    password: admin
+    user: admin
+    packages:
+      trust-all: true
+    close-timeout: 10s
+
+server:
+  port: 8081
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+    enabled: true
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 10

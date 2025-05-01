@@ -1,69 +1,21 @@
 services:
-  postgres:
-    image: ${PSG_DB_IMAGE_NAME}
-    container_name: ${PSG_DB_CONTAINER_NAME}
+  activemq:
+    image: apache/activemq-classic:5.17.7
+    container_name: active-mq
     environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
+      ACTIVEMQ_WEB_USER: admin
+      ACTIVEMQ_WEB_PASSWORD: admin
     ports:
-      - "${DB_PORT}:5432"
+      - "61616:61616"  # JMS
+      - "8161:8161"    # Web console
     volumes:
-      - postgres-data:/var/lib/postgresql/data
+      - activemq-data:/opt/activemq/data  # persistent data
     networks:
-      - app-network
+      - activemq-network
     restart: unless-stopped
-
-  mongo:
-    image: ${MONGO_DB_IMAGE_NAME}
-    container_name: ${MONGO_DB_CONTAINER_NAME}
-    environment:
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
-    ports:
-      - "${MONGO_DB_PORT}:27017"
-    volumes:
-      - mongo-data:/data/db
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  kafka:
-    image: apache/kafka:3.7.2
-    hostname: kafka
-    container_name: kafka
-    ports:
-      - "9092:9092"
-    environment:
-      KAFKA_KRAFT_MODE: "true"                     # Enable KRaft mode for Kafka (no Zookeeper).
-      KAFKA_PROCESS_ROLES: controller,broker       # Kafka will act as both a broker and a controller.
-      KAFKA_NODE_ID: 1                             # A unique ID for this Kafka instance.
-      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"                        # Quorum voters for the controller.
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093       # Define listeners for broker and controller.
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT  # Security protocols for listeners.
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT                          # Inter-broker communication happens over PLAINTEXT.
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER                          # Name of the controller listener.
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Advertise the broker listener (clients will connect here).
-      KAFKA_LOG_DIRS: /var/lib/kafka/data                     # Directory for Kafka logs.
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"                 # Enable automatic topic creation.
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1              # Single replica for offset topic.
-      KAFKA_LOG_RETENTION_HOURS: 168                         # Retain logs for 7 days.
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0              # No delay for consumer rebalancing.
-      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"               # Unique cluster ID.
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - ./data:/var/lib/kafka/data  # Store Kafka logs on the local machine.
-    networks:
-      - app-network
-
-
-
-
-volumes:
-  kafka-data:
-  postgres-data:
-  mongo-data:
-  rabbitmq-data:
 
 networks:
-  app-network:
-    driver: bridge
+  activemq-network:
+
+volumes:
+  activemq-data:

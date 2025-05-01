@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: user
+    version: 1.0.0
+  activemq:
+    broker-url: tcp://localhost:61616
+    password: admin
+    user: admin
+    packages:
+      trust-all: true
+    close-timeout: 10s
+  config:
+    import: optional:configserver:http://localhost:8888
+
